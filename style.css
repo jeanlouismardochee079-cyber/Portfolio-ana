@@ -1,0 +1,66 @@
+/* ========== RESET & BASE ========== */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',system-ui,-apple-system,sans-serif; background:#0A0F1A; color:#E2E8F0; }
+.app { display:flex; min-height:100vh; }
+
+/* ========== SIDEBAR ========== */
+.sidebar { width:250px; background:#0F172A; padding:2rem 1rem; display:flex; flex-direction:column; gap:2rem; border-right:1px solid #1E293B; }
+.logo { font-size:1.5rem; font-weight:700; color:#3B82F6; display:flex; align-items:center; gap:0.5rem; }
+.nav-link { display:flex; align-items:center; gap:0.7rem; padding:0.8rem 1rem; border-radius:0.5rem; color:#94A3B8; text-decoration:none; transition:0.2s; cursor:pointer; }
+.nav-link:hover, .nav-link.active { background:#1E293B; color:#3B82F6; }
+.sidebar-footer { margin-top:auto; color:#64748B; font-size:0.9rem; }
+
+/* ========== MAIN ========== */
+.main-content { flex:1; padding:2rem; overflow-y:auto; background:#0B111E; }
+.page { display:none; }
+.page.active { display:block; }
+h1 { font-size:2rem; margin-bottom:1.5rem; color:#F1F5F9; }
+
+/* ========== CARDS & STATS ========== */
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem; margin-bottom:2rem; }
+.stat-card { background:#1E293B; border-radius:0.8rem; padding:1.2rem; backdrop-filter:blur(10px); border:1px solid #334155; }
+.stat-card .label { font-size:0.8rem; color:#94A3B8; }
+.stat-card .value { font-size:1.8rem; font-weight:700; margin-top:0.3rem; }
+.charts-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(400px,1fr)); gap:1.5rem; }
+.chart-card { background:#1E293B; border-radius:0.8rem; padding:1.5rem; border:1px solid #334155; }
+canvas { width:100% !important; height:300px !important; }
+
+/* ========== TOOLBAR & TABLE ========== */
+.toolbar { display:flex; gap:0.8rem; margin-bottom:1rem; flex-wrap:wrap; align-items:center; }
+.toolbar input, .toolbar select { padding:0.6rem; background:#1E293B; border:1px solid #334155; border-radius:0.4rem; color:white; }
+.table-container { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; min-width:1200px; background:#1E293B; border-radius:0.5rem; }
+th, td { padding:0.7rem; text-align:left; border-bottom:1px solid #334155; }
+th { background:#0F172A; color:#94A3B8; font-weight:600; }
+tr:hover { background:#2D3748; }
+
+/* ========== BUTTONS ========== */
+.btn { padding:0.6rem 1.2rem; border-radius:0.4rem; border:none; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:0.5rem; }
+.btn-primary { background:#3B82F6; color:white; }
+.btn-primary:hover { background:#2563EB; }
+.btn-danger { background:#EF4444; color:white; }
+.btn-danger:hover { background:#DC2626; }
+.btn-secondary { background:#475569; color:white; }
+
+/* ========== MODAL ========== */
+.modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); display:flex; align-items:center; justify-content:center; z-index:1000; }
+.modal.hidden { display:none; }
+.modal-content { background:#1E293B; border-radius:1rem; padding:2rem; width:90%; max-width:800px; max-height:90vh; overflow-y:auto; }
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+.full-width { grid-column:span 2; }
+label { font-size:0.85rem; color:#94A3B8; display:block; margin-bottom:0.2rem; }
+input, select, textarea { width:100%; padding:0.6rem; background:#0F172A; border:1px solid #334155; border-radius:0.4rem; color:white; }
+.auto-fields { display:grid; grid-template-columns:repeat(4,1fr); gap:0.8rem; margin:1rem 0; }
+.modal-actions { display:flex; justify-content:flex-end; gap:0.8rem; margin-top:1rem; }
+
+/* ========== RESPONSIVE ========== */
+@media (max-width:768px) {
+    .app { flex-direction:column; }
+    .sidebar { width:100%; flex-direction:row; overflow-x:auto; padding:1rem; gap:0.5rem; }
+    .sidebar-footer { display:none; }
+    .logo { font-size:1.2rem; }
+    .main-content { padding:1rem; }
+    .charts-grid { grid-template-columns:1fr; }
+    .form-grid { grid-template-columns:1fr; }
+    .auto-fields { grid-template-columns:1fr 1fr; }
+              }

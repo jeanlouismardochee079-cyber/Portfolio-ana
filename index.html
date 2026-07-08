@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeJournal Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-chart-line"></i> TradeJournal
+            </div>
+            <nav>
+                <a class="nav-link active" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a class="nav-link" data-page="journal"><i class="fas fa-book"></i> Journal</a>
+                <a class="nav-link" data-page="analytics"><i class="fas fa-chart-pie"></i> Analytics</a>
+                <a class="nav-link" data-page="importexport"><i class="fas fa-file-export"></i> Données</a>
+            </nav>
+            <div class="sidebar-footer">
+                <i class="fas fa-user-circle"></i> Trader
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <section id="page-dashboard" class="page active">
+                <h1>Tableau de bord</h1>
+                <div class="stats-grid" id="statsContainer"></div>
+                <div class="charts-grid">
+                    <div class="chart-card"><canvas id="equityCurve"></canvas></div>
+                    <div class="chart-card"><canvas id="balanceCurve"></canvas></div>
+                    <div class="chart-card"><canvas id="profitByDay"></canvas></div>
+                    <div class="chart-card"><canvas id="winLossPie"></canvas></div>
+                    <div class="chart-card"><canvas id="profitByWeek"></canvas></div>
+                    <div class="chart-card"><canvas id="profitByMonth"></canvas></div>
+                    <div class="chart-card"><canvas id="performanceByPair"></canvas></div>
+                    <div class="chart-card"><canvas id="performanceBySession"></canvas></div>
+                    <div class="chart-card"><canvas id="performanceByWeekday"></canvas></div>
+                    <div class="chart-card"><canvas id="performanceByStrategy"></canvas></div>
+                </div>
+            </section>
+
+            <!-- Journal Page -->
+            <section id="page-journal" class="page">
+                <h1>Journal des trades</h1>
+                <div class="toolbar">
+                    <button class="btn btn-primary" id="openAddModal"><i class="fas fa-plus"></i> Ajouter</button>
+                    <input type="text" id="searchInput" placeholder="Rechercher...">
+                    <select id="filterStrategy">
+                        <option value="">Toutes stratégies</option>
+                    </select>
+                    <select id="filterPair">
+                        <option value="">Toutes paires</option>
+                    </select>
+                    <select id="filterResult">
+                        <option value="">Tous résultats</option>
+                        <option value="win">Gagnants</option>
+                        <option value="loss">Perdants</option>
+                    </select>
+                </div>
+                <div class="table-container">
+                    <table id="tradesTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th><th>Heure</th><th>Paire</th><th>A/V</th><th>Lot</th><th>Entrée</th><th>SL</th><th>TP</th><th>Sortie</th>
+                                <th>Pips</th><th>Profit</th><th>Risque%</th><th>R:R</th><th>Session</th><th>Stratégie</th><th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tradesBody"></tbody>
+                    </table>
+                </div>
+                <!-- Pagination simple -->
+                <div class="pagination" id="pagination"></div>
+            </section>
+
+            <!-- Analytics Page -->
+            <section id="page-analytics" class="page">
+                <h1>Analyses détaillées</h1>
+                <div class="analytics-grid" id="analyticsContainer"></div>
+                <div class="chart-card"><canvas id="drawdownChart"></canvas></div>
+            </section>
+
+            <!-- Import/Export Page -->
+            <section id="page-importexport" class="page">
+                <h1>Gestion des données</h1>
+                <div class="card">
+                    <h2>Export</h2>
+                    <button class="btn btn-primary" id="exportCSV"><i class="fas fa-file-csv"></i> Export CSV</button>
+                    <button class="btn btn-primary" id="exportJSON"><i class="fas fa-file-code"></i> Export JSON</button>
+                </div>
+                <div class="card">
+                    <h2>Import</h2>
+                    <input type="file" id="importFile" accept=".json,.csv">
+                    <button class="btn btn-primary" id="importBtn"><i class="fas fa-upload"></i> Importer</button>
+                </div>
+                <div class="card">
+                    <h2>Réinitialisation</h2>
+                    <button class="btn btn-danger" id="resetAll"><i class="fas fa-trash-alt"></i> Réinitialiser tout</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal Ajout/Modification Trade -->
+    <div id="tradeModal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="modalTitle">Ajouter un trade</h2>
+            <form id="tradeForm">
+                <div class="form-grid">
+                    <div><label>Date</label><input type="date" id="tDate" required></div>
+                    <div><label>Heure</label><input type="time" id="tTime"></div>
+                    <div><label>Paire</label><input type="text" id="tPair" placeholder="EUR/USD" required></div>
+                    <div><label>Achat/Vente</label><select id="tDirection"><option value="Long">Achat</option><option value="Short">Vente</option></select></div>
+                    <div><label>Taille lot</label><input type="number" step="any" id="tLot" value="1.0" required></div>
+                    <div><label>Entrée</label><input type="number" step="any" id="tEntry" required></div>
+                    <div><label>Stop Loss</label><input type="number" step="any" id="tSL"></div>
+                    <div><label>Take Profit</label><input type="number" step="any" id="tTP"></div>
+                    <div><label>Sortie</label><input type="number" step="any" id="tExit" required></div>
+                    <div><label>Session</label><select id="tSession"><option>Tokyo</option><option>Londres</option><option>New York</option><option>Autre</option></select></div>
+                    <div><label>Stratégie</label><input type="text" id="tStrategy" placeholder="ex: ICT, SMC"></div>
+                    <div class="full-width"><label>Capture d'écran</label><input type="file" id="tScreenshot" accept="image/*"></div>
+                    <div class="full-width"><label>Notes</label><textarea id="tNotes" rows="2"></textarea></div>
+                    <div><label>Émotion avant</label><select id="tEmotionBefore"><option>Confiant</option><option>Neutre</option><option>Stressé</option><option>Excitié</option></select></div>
+                    <div><label>Émotion après</label><select id="tEmotionAfter"><option>Confiant</option><option>Neutre</option><option>Stressé</option><option>Excitié</option></select></div>
+                </div>
+                <!-- Champs calculés -->
+                <div class="auto-fields">
+                    <div><label>Pips</label><input type="text" id="tPips" readonly></div>
+                    <div><label>Profit/Perte (€)</label><input type="text" id="tProfit" readonly></div>
+                    <div><label>Risque (%)</label><input type="text" id="tRisk" readonly></div>
+                    <div><label>Risk/Reward</label><input type="text" id="tRR" readonly></div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="closeModal">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+                                                                              </html>
